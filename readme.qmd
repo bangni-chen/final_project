@@ -1,5 +1,5 @@
 ---
-title: "Demonstrating Quarto for GitHub READMEs"
+title: "Final Project: Instagram Post Performance Analysis"
 format: gfm
 execute: 
   warning: false
@@ -8,178 +8,288 @@ execute:
 jupyter: python3
 ---
 
-## Section Header
+## The Data
+This dataset includes Instagram post-level metrics for reach and engagement. Key numeric columns are Impressions, Likes, Comments, Saves, Shares, Profile Visits, Follows, and the breakdown of impressions by source (From Home, From Hashtags, From Explore, From Other). There are also two text columns: Caption and Hashtags. The goal of the analysis is clear and testable: to see which content and distribution features predict post reach and engagement, and whether the text in captions or hashtags is associated with higher engagement.
 
-You'll want to make use of sections and subsections to organize your document. Think of the sections as broad categories, and subsections as more specific topics within those categories. I can make bigger statements at this level.
+### Read
 
-### Subsection Header
-
-Subsections are useful for breaking ideas down and adding details. This is also likely where you'll want to add code blocks. 
-
-It will be worth noting some chunk options that you might find useful.
-
-If I want to hide code but show output, I can use `echo: false`.
+Load the datasets.
 
 ```{python}
-#| echo: false
-2 + 2
-```
-
-If I want to hide output but show code, I can use `results: 'hide'`.
-
-```{python}
-#| results: 'hide'
-2 + 2
-```
-
-Maybe I want to show the code, but not run it. I can use `eval: false`.
-
-```{python}
-#| eval: false
-2 + 2
-```
-
-In most of your chunks, you'll probably want to turn off messages and warnings. You might notice, though, that I did that globally in the execute key in the header above. But if you want to do it in a specific chunk, you can use:
-
-```{python}
-#| messages: false
-#| warnings: false
-```
-
-## Loading Data and Models
-
-If your project relies on heavy computations (either for the data prep or modeling), you'll probably want to show your work in a code chunk that does not evaluate. 
-
-```{python}
-#| eval: false
-#| echo: true
-
-'''
-Imagine that this is a long code block that reads data
-and then starts your wrangling tasks. If it takes 
-over a minute to run, you'll probably want to have
-that work saved in a script and write your data out
-to a file.
-'''
-
-```
-
-You can quietly load in your prepped data in another chunk.
-
-```{python}
-#| echo: false
 import pandas as pd
-#data = pd.read_csv('path/to/your/prepped_data.csv')
-```
-
-The same holds true for models, especially if you're fitting complex models that take 
-
-## Rendering Outputs
-
-When I render this document, the output will be ready to appear as the `readme` on my GitHub repository. Let's see how that might look with some plots and tables.
-
-Notice below that I'm not going to print my code, I just want it to run.
-```{python}
-#| echo: false
-#| messages: false
-#| warnings: false
-
-import matplotlib.pyplot as plt
-import numpy as np 
-import pandas as pd
+import numpy as np
+import statsmodels.api as sm
 import seaborn as sns
+import matplotlib.pyplot as plt
 ```
 
-Let's see what a simple plot looks like.
+```{python}
+ins = pd.read_csv("~/Desktop/Data Wrangling/project/Instagram Data.csv", encoding="latin1")                
+```
 
 ```{python}
-#| messages: false
-#| warnings: false
+ins.head()
+```
 
-data = {
-    'x': np.linspace(0, 10, 100),
-    'y': np.sin(np.linspace(0, 10, 100))
-}
+```{python}
+ins.columns
+```
 
-df = pd.DataFrame(data)
+### Visualization 1
 
-sns.lineplot(data=df, x='x', y='y')
-plt.title('Sine Wave')
-plt.xlabel('X-axis')
-plt.ylabel('Y-axis')
+To understand the overall structure of the dataset before building models, I first visualize the distributions of impressions and engagement. These plots give an initial idea of how skewed the reach metrics are and whether user interactions differ systematically across posts.
+
+```{python}
+# Distribution of Impressions
+plt.figure(figsize=(8,5))
+sns.histplot(ins['Impressions'], bins=50)
+plt.title("Distribution of Impressions")
+plt.xlabel("Impressions")
+plt.ylabel("Number of Posts")
 plt.show()
 ```
 
-This is where I am going to offer some explanations about the sine wave above. 
-
-Now let's see what a table looks like.
-
 ```{python}
-#| echo: true
-#| messages: false
-#| warnings: false
-#| results: 'markdown'
-data_table = {
-    'A': [1, 2, 3, 4, 5],
-    'B': ['a', 'b', 'c', 'd', 'e'],
-    'C': [10.5, 20.3, 30.2, 40.1, 50.0]
-}
-df_table = pd.DataFrame(data_table)
-df_table.head().to_markdown()
+# Distribution of composite engagement metric
+ins['engagement'] = ins[['Likes','Comments','Saves','Shares','Profile Visits','Follows']].sum(axis=1)
+
+plt.figure(figsize=(8,5))
+sns.histplot(ins['engagement'], bins=50)
+plt.title("Distribution of Engagement (sum of Likes, Comments, Saves, Shares, Profile Visits, Follows)")
+plt.xlabel("Engagement")
+plt.ylabel("Number of Posts")
+plt.show()
 ```
 
-Notice the use of `to_markdown()` to render the table nicely in GitHub's markdown format. It is a small thing that will make a big in difference in how your document looks!
-
-Now, let's see what some linear model output looks like.
-
 ```{python}
-#| echo: true
-#| messages: false
-#| warnings: false
-import statsmodels.api as sm    
-X = df[['x']]
-y = df['y']
-X = sm.add_constant(X) 
-model = sm.OLS(y, X).fit()
-summary_table = model.summary().tables[1] 
-print(summary_table)
+# Total impressions by source to see which source drives the most engagement
+source = ['From Home','From Hashtags','From Explore','From Other']
+# Sum impressions for each source, convert to DataFrame, and rename columns for plotting
+total = ins[source].sum().rename('Total Impressions').reset_index().rename(columns={'index':'Source'})
+
+plt.figure(figsize=(8,5))
+sns.barplot(data=total, x='Source', y='Total Impressions', hue='Source')
+plt.title("Total Impressions by Source")
+plt.ylabel("Total Impressions")
+plt.show()
 ```
 
-Notice how I indexed into the summary table object to just get the coefficients table?
+### Feature Engineering
 
-You migth want to talk about your coefficients and there are two ways that you can do that:
+To better characterize the properties of each post, I created several new variables, including caption length, hashtag counts, and indicators that detect the presence and frequency of the phrase “data science” in both captions and hashtags.
 
-1. Manually type out your interpretations below the table.
-2. Use code to extract the coefficients and generate text automatically.
-
-Option number 1, while more straightforward, is not the choice. Option number 2 is more dynamic and reproducible, especially if you plan to update your model or data in the future.
+caption_length
 
 ```{python}
-#| echo: true
-#| messages: false
-#| warnings: false
-params = model.params
-intercept = params['const']
-slope = params['x'] 
+# Count characters in caption to further check whether longer captions increase engagement
+ins['caption_length'] = ins['Caption'].astype(str).str.len()
 ```
 
-Now that those are out, I can use inline chunks to reference them in my text. You can think of inline chunks a lot like f-strings.
+hashtags_count
 
-The intercept of the model is `{python} str(intercept.round(3))` and the slope is `{python} str(slope.round(3))`. No matter what I do with my data or model, these values will always be up to date in my text!
+```{python}
+# Count hashtags to see how heavily tags are used
+def count_hashtags(s):
+    if str(s).strip() == "":
+        return 0 # Return 0 for empty values because no hashtags exist
+    tokens = str(s).split() # Split by whitespace as hashtags are separated by spaces
+    return len(tokens) # Count all tokens since every token is a hashtag in this format
+ins['hashtags_count'] = ins['Hashtags'].apply(count_hashtags)
+```
 
-I can also pull out model fit statistics like *R*-squared. The *R*-squared for this model is `{python} str(model.rsquared.round(3))`.
+pct_from_hashtags
 
-You have the full power of markdown and Python at your disposal. I just want to show you some handy markdown things that you might want to use. 
+```{python}
+# Calculate the fraction of impressions from hashtags, replace total impressions of 0 with NaN to avoid division by zero, then fill resulting NaNs with 0 for clean data
+ins['pct_from_hashtags'] = (ins['From Hashtags'] / ins['Impressions'].replace(0, np.nan)).fillna(0)  
+```
 
-I can create **bold** text or *italicized* text.
+high_engagement
 
-Functions and variables can be represented in `monospace`. Note that those are backticks, not apostrophes.
+```{python}
+# Create a binary indicator for engagement above the median for use in logistic regression
+ins['high_engagement'] = (ins['engagement'] > ins['engagement'].median()).astype(int)
+```
 
-You can create bullet point lists:
+data_science_in_caption
 
-- Item 1
-- Item 2
-  - Subitem 2a
-  - Subitem 2b
+```{python}
+# Create a binary variable detecting presence of "data science" in Caption
+ins['data_science_caption'] = ins['Caption'].astype(str).str.contains('[Dd]ata\\s?[Ss]cience', regex=True)
 
-You might want to include links within your document. You can use html links like this: <a href="https://www.example.com">Example</a> or markdown links like this: [Example](https://www.example.com).
+# Convert True/False into numeric 1/0 for modeling
+ins['data_science_caption'] = ins['data_science_caption'].apply(lambda x: 1 if x else 0)
+
+# Count number of times "data science" appears in caption
+ins['data_science_count_caption'] = ins['Caption'].astype(str).str.count('[Dd]ata\\s?[Ss]cience')
+
+# View results
+ins[['Caption', 'data_science_caption', 'data_science_count_caption']].head()         
+```
+
+data_science_in_hashtags
+
+```{python}
+# Create a binary variable detecting presence of "data science" in hashtags
+ins['data_science_hashtags'] = ins['Hashtags'].astype(str).str.contains('[Dd]ata\\s?[Ss]cience', regex=True)
+
+# Convert True/False into numeric 1/0 for modeling
+ins['data_science_hashtags'] = ins['data_science_hashtags'].apply(lambda x: 1 if x else 0)
+
+# Count number of times "data science" appears in hashtags
+ins['data_science_count_hashtags'] = ins['Hashtags'].astype(str).str.count('[Dd]ata\\s?[Ss]cience')
+
+# View result
+ins[['Hashtags', 'data_science_hashtags', 'data_science_count_hashtags']].head()
+```
+
+### Subsetting 
+
+Before moving to regression models, I examine how posts differ when grouped by hashtag usage and engagement levels. These comparisons give a first look at possible patterns and help set expectations for the modeling stage.
+
+```{python}
+# Subset posts that used at least one hashtag to compare hashtagged vs non-hashtagged
+hashtag_posts = ins[ins['hashtags_count'] > 0]
+hashtag_posts.head()
+```
+
+```{python}
+# Subset high engagement posts to identify characteristics of top-performing posts
+high_engagement_posts = ins[ins['high_engagement'] == 1]
+high_engagement_posts.head()
+```
+
+### Summarizing
+
+```{python}
+# Summarize impressions, engagement, likes, and comments grouped by whether posts have hashtags
+summary_by_hashtag = ins.groupby(ins['hashtags_count']>0)[['Impressions','engagement','Likes','Comments']].agg(['mean','median','count'])
+summary_by_hashtag
+```
+
+```{python}
+# Calculate total impressions from each source to see which source contributes the most to overall impressions
+summary_by_source = pd.DataFrame({
+    'from_home_total': ins['From Home'].sum(),
+    'from_hashtags_total': ins['From Hashtags'].sum(),
+    'from_explore_total': ins['From Explore'].sum(),
+    'from_other_total': ins['From Other'].sum()
+}, index=[0])
+summary_by_source
+```
+
+### Visualization 2
+
+To further check the newly created variables, I created a second set of visualizations. These plots show how hashtag use and “data science”-related terms relate to post performance, providing an initial look at how the engineered textual features might affect reach and interaction.
+
+```{python}
+# Scatterplot of hashtag count vs engagement to check whether more hashtags is linked to higher engagement
+plt.figure(figsize=(8,5))
+sns.scatterplot(data=ins, x='hashtags_count', y='engagement')
+plt.title("Hashtag Count vs Engagement")
+plt.xlabel("Number of Hashtags")
+plt.ylabel("Engagement")
+plt.show()
+```
+
+```{python}
+# Boxplot to compare impressions for posts that mention “data science” in captions vs those do not
+plt.figure(figsize=(8,5))
+sns.boxplot(data=ins, x='data_science_caption', y='Impressions')
+plt.title("Impressions by Presence of 'Data Science' in Caption")
+plt.xlabel("Data Science Mention in Caption")
+plt.ylabel("Impressions")
+plt.show()
+```
+
+```{python}
+# Scatterplot to show whether count of “data science” in caption is associated with higher engagement
+plt.figure(figsize=(8,5))
+sns.scatterplot(data=ins, x='data_science_count_caption', y='engagement')
+plt.title("Data Science Count in Caption vs Engagement")
+plt.xlabel("Data Science Count in Caption")
+plt.ylabel("Engagement")
+plt.show()
+```
+
+```{python}
+# Boxplot to compare impressions for posts that mention “data science” in hashtags vs those do not
+plt.figure(figsize=(8,5))
+sns.boxplot(data=ins, x='data_science_hashtags', y='Impressions')
+plt.title("Impressions by Presence of 'Data Science' in Hashtags")
+plt.xlabel("Data Science Mention in Hashtags")
+plt.ylabel("Impressions")
+plt.show()
+```
+
+```{python}
+# Scatterplot to show whether count of “data science” in hashtags is associated with higher engagement
+plt.figure(figsize=(8,5))
+sns.scatterplot(data=ins, x='data_science_count_hashtags', y='engagement')
+plt.title("Data Science Count in Hashtags vs Engagement")
+plt.xlabel("Data Science Count in Hashtags")
+plt.ylabel("Engagement")
+plt.show()
+```
+
+### Model
+
+Finally, I estimate three models: OLS, Logit, and Poisson, to analyze how text features, hashtag behavior, and "data science"–related terms predict different outcomes. Each model corresponds to a different type of dependent variable: continuous reach (OLS), binary engagement (Logit), and count-based interactions (Poisson).
+
+OLS model
+
+```{python}
+# Create log-transformed outcome variable in the DataFrame to reduce skew
+ins['log_engagement'] = np.log(ins['engagement'] + 1)  
+
+# Define formula for predictors
+ols_formula = (
+    "log_engagement ~ caption_length + hashtags_count + pct_from_hashtags + "
+    "data_science_caption + data_science_hashtags + data_science_count_caption + "
+    "data_science_count_hashtags + "
+    "Q('From Home') + Q('From Hashtags') + Q('From Explore') + Q('From Other')"
+)
+
+# Build ols model
+ols_model = sm.formula.ols(formula=ols_formula, data=ins).fit()
+
+ols_model.summary()
+```
+
+The OLS model using log-transformed engagement has an R-squared of 0.783, showing strong explanatory power. The results indicate that adding more hashtags is linked to lower engagement, and a higher share of impressions from hashtags also predicts lower engagement. On the other hand, mentions of “data science” within hashtags are positively associated with engagement. Impressions from Home and from Hashtags are both significant positive predictors, with Home impressions having the largest impact. Overall, the model suggests that just adding hashtags does not help much, while using targeted hashtag content and getting more exposure from key channels, especially the Home feed, is more important for higher engagement.
+
+Logit model
+
+```{python}
+# Logistic regression predicting high engagement
+logit_formula = (
+    "high_engagement ~ caption_length + hashtags_count + pct_from_hashtags + "
+    "data_science_caption + data_science_hashtags + data_science_count_caption + "
+    "data_science_count_hashtags + "
+    "Q('From Home') + Q('From Hashtags') + Q('From Explore') + Q('From Other')"
+)
+
+logit_model = sm.formula.logit(formula=logit_formula, data=ins).fit()
+logit_model.summary()
+
+```
+
+The logistic regression predicting whether a post gets above-median engagement has a pseudo R-squared of 0.6366, showing reasonably good classification. The only significant predictor is impressions from Home, with each extra Home impression increasing the odds of high engagement by about 0.62%. Textual features such as caption length, number of hashtags, and the data-science indicators are not significant, suggesting that exposure through the Home feed is the strongest factor for whether a post performs above the median.
+
+Poisson model
+
+```{python}
+# Poisson model predicting engagement counts
+poisson_formula = (
+    "engagement ~ caption_length + hashtags_count + pct_from_hashtags + "
+    "data_science_caption + data_science_hashtags + data_science_count_caption + "
+    "data_science_count_hashtags + "
+    "Q('From Home') + Q('From Hashtags') + Q('From Explore') + Q('From Other')"
+)
+
+poisson_model = sm.formula.poisson(formula=poisson_formula, data=ins).fit()
+
+poisson_model.summary()
+```
+
+The Poisson regression on raw engagement counts shows strong explanatory power, with a pseudo R-squared of 0.7739. Caption length and the number of hashtags both have small but significant negative effects on engagement, and a higher share of impressions coming from hashtags is also linked to lower engagement. In contrast, mentioning the target phrase, especially when mentioned multiple times, tends to increase engagement in both captions and hashtags. All four impression-source variables (Home, Hashtags, Explore, Other) are positive predictors, and increases in Home impressions appear to have the largest practical effect. Overall, the Poisson results are consistent with the OLS findings: more general hashtags do not necessarily help, while topic-specific mentions and stronger visibility through key sources, especially the Home feed, are associated with higher engagement.
