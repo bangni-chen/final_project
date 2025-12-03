@@ -17,7 +17,7 @@ Data source: Instagram Reach Analysis: Case Study, Kaggle — https://www.kaggle
 
 ## Read
 
-### Load the datasets.
+### Load the datasets
 
 ```{python}
 import pandas as pd
@@ -128,7 +128,7 @@ ins['data_science_caption'] = ins['data_science_caption'].apply(lambda x: 1 if x
 ins['data_science_count_caption'] = ins['Caption'].astype(str).str.count('[Dd]ata\\s?[Ss]cience')
 
 # View results
-ins[['Caption', 'data_science_caption', 'data_science_count_caption']].head()         
+ins[['Caption', 'data_science_caption', 'data_science_count_caption']].head()
 ```
 
 ### data_science_in_hashtags
