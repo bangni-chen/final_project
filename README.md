@@ -229,6 +229,7 @@ hashtag_posts.head()
 | 3 | 4528 | 2700 | 621 | 932 | 73 | 172 | 10 | 7 | 213 | 23 | ... | \#python #pythonprogramming #pythonprojects #py... | 433 | 202 | 11 | 0.137147 | 1 | 0 | 0 | 0 | 0 |
 | 4 | 2518 | 1704 | 255 | 279 | 37 | 96 | 5 | 4 | 123 | 8 | ... | \#datavisualization #datascience #data #dataana... | 236 | 178 | 29 | 0.101271 | 0 | 0 | 0 | 1 | 1 |
 
+<p>5 rows × 22 columns</p>
 
 
 ``` python
@@ -247,6 +248,7 @@ high_engagement_posts.head()
 | 9 | 4115 | 2609 | 1104 | 178 | 46 | 122 | 6 | 3 | 191 | 31 | ... | \#python #pythonprogramming #pythonprojects #py... | 359 | 79 | 11 | 0.268287 | 1 | 0 | 0 | 0 | 0 |
 | 14 | 9453 | 2525 | 5799 | 208 | 794 | 100 | 6 | 10 | 294 | 181 | ... | \#data #datascience #dataanalysis #dataanalytic... | 633 | 60 | 19 | 0.613456 | 1 | 0 | 0 | 1 | 1 |
 
+<p>5 rows × 22 columns</p>
 
 
 ## Summarizing
@@ -264,7 +266,6 @@ summary_by_hashtag
 |  | mean | median | count | mean | median | count | mean | median | count | mean | median | count |
 | hashtags_count |  |  |  |  |  |  |  |  |  |  |  |  |
 | True | 5703.991597 | 4289.0 | 119 | 414.495798 | 314.0 | 119 | 173.781513 | 151.0 | 119 | 6.663866 | 6.0 | 119 |
-
 
 
 ``` python
@@ -388,7 +389,7 @@ ols_model.summary()
 | Model:            | OLS              | Adj. R-squared:     | 0.761    |
 | Method:           | Least Squares    | F-statistic:        | 35.17    |
 | Date:             | Wed, 03 Dec 2025 | Prob (F-statistic): | 1.43e-30 |
-| Time:             | 13:03:01         | Log-Likelihood:     | -11.223  |
+| Time:             | 13:11:06         | Log-Likelihood:     | -11.223  |
 | No. Observations: | 119              | AIC:                | 46.45    |
 | Df Residuals:     | 107              | BIC:                | 79.79    |
 | Df Model:         | 11               |                     |          |
@@ -456,7 +457,7 @@ logit_model.summary()
 | Model:           | Logit            | Df Residuals:     | 107       |
 | Method:          | MLE              | Df Model:         | 11        |
 | Date:            | Wed, 03 Dec 2025 | Pseudo R-squ.:    | 0.6366    |
-| Time:            | 13:03:01         | Log-Likelihood:   | -29.976   |
+| Time:            | 13:11:06         | Log-Likelihood:   | -29.976   |
 | converged:       | True             | LL-Null:          | -82.480   |
 | Covariance Type: | nonrobust        | LLR p-value:      | 1.810e-17 |
 
@@ -505,7 +506,9 @@ poisson_model = sm.formula.poisson(formula=poisson_formula, data=ins).fit()
 poisson_model.summary()
 ```
 
-
+    Warning: Maximum number of iterations has been exceeded.
+             Current function value: 21.360429
+             Iterations: 35
 
 The Poisson regression on raw engagement counts shows strong explanatory
 power, with a pseudo R-squared of 0.7739. Caption length and the number
