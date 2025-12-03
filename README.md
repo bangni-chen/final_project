@@ -22,7 +22,7 @@ https://www.kaggle.com/datasets/bhanupratapbiswas/instagram-reach-analysis-case-
 
 ## Read
 
-### Load the datasets.
+### Load the datasets
 
 ``` python
 import pandas as pd
@@ -37,10 +37,20 @@ ins = pd.read_csv("~/Desktop/Data Wrangling/project/Instagram Data.csv", encodin
 ```
 
 ``` python
-ins.head().to_markdown()
+ins.head()
 ```
 
-    '|    |   Impressions |   From Home |   From Hashtags |   From Explore |   From Other |   Saves |   Comments |   Shares |   Likes |   Profile Visits |   Follows | Caption                                                                                                                                                                                     | Hashtags                                                                                                                                                                                                                                                                                                                                                                               |\n|---:|--------------:|------------:|----------------:|---------------:|-------------:|--------:|-----------:|---------:|--------:|-----------------:|----------:|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|\n|  0 |          3920 |        2586 |            1028 |            619 |           56 |      98 |          9 |        5 |     162 |               35 |         2 | Here are some of the most important data visualizations that every Financial Data Analyst/Scientist should know.                                                                            | #finance\xa0#money\xa0#business\xa0#investing\xa0#investment\xa0#trading\xa0#stockmarket\xa0#data\xa0#datascience\xa0#dataanalysis\xa0#dataanalytics\xa0#datascientist\xa0#machinelearning\xa0#python\xa0#pythonprogramming\xa0#pythonprojects\xa0#pythoncode\xa0#artificialintelligence\xa0#ai\xa0#dataanalyst\xa0#amankharwal\xa0#thecleverprogrammer                                                                                               |\n|  1 |          5394 |        2727 |            1838 |           1174 |           78 |     194 |          7 |       14 |     224 |               48 |        10 | Here are some of the best data science project ideas on healthcare. If you want to become a data science professional in the healthcare domain then you must try to work on these projects. | #healthcare\xa0#health\xa0#covid\xa0#data\xa0#datascience\xa0#dataanalysis\xa0#dataanalytics\xa0#datascientist\xa0#machinelearning\xa0#python\xa0#pythonprogramming\xa0#pythonprojects\xa0#pythoncode\xa0#artificialintelligence\xa0#ai\xa0#dataanalyst\xa0#amankharwal\xa0#thecleverprogrammer                                                                                                                                           |\n|  2 |          4021 |        2085 |            1188 |              0 |          533 |      41 |         11 |        1 |     131 |               62 |        12 | Learn how to train a machine learning model and giving inputs to your trained model to make predictions using Python.                                                                       | #data\xa0#datascience\xa0#dataanalysis\xa0#dataanalytics\xa0#datascientist\xa0#machinelearning\xa0#python\xa0#pythonprogramming\xa0#pythonprojects\xa0#pythoncode\xa0#artificialintelligence\xa0#ai\xa0#deeplearning\xa0#machinelearningprojects\xa0#datascienceprojects\xa0#amankharwal\xa0#thecleverprogrammer\xa0#machinelearningmodels                                                                                                |\n|  3 |          4528 |        2700 |             621 |            932 |           73 |     172 |         10 |        7 |     213 |               23 |         8 | Here\x92s how you can write a Python program to detect whether a sentence is a question or not. The idea here is to find the words that we see in the beginning of a question in the beginning of a sentence.                                                                                                                                                                                             | #python\xa0#pythonprogramming\xa0#pythonprojects\xa0#pythoncode\xa0#pythonlearning\xa0#pythondeveloper\xa0#pythoncoding\xa0#pythonprogrammer\xa0#amankharwal\xa0#thecleverprogrammer\xa0#pythonprojects                                                                                                                                                                                                              |\n|  4 |          2518 |        1704 |             255 |            279 |           37 |      96 |          5 |        4 |     123 |                8 |         0 | Plotting annotations while visualizing your data is considered good practice to make the graphs self-explanatory. Here is an example of how you can annotate a graph using Python.          | #datavisualization\xa0#datascience\xa0#data\xa0#dataanalytics\xa0#machinelearning\xa0#dataanalysis\xa0#artificialintelligence\xa0#python\xa0#datascientist\xa0#bigdata\xa0#deeplearning\xa0#dataviz\xa0#ai\xa0#analytics\xa0#technology\xa0#dataanalyst\xa0#programming\xa0#pythonprogramming\xa0#statistics\xa0#coding\xa0#businessintelligence\xa0#datamining\xa0#tech\xa0#business\xa0#computerscience\xa0#tableau\xa0#database\xa0#thecleverprogrammer\xa0#amankharwal |'
+
+
+|  | Impressions | From Home | From Hashtags | From Explore | From Other | Saves | Comments | Shares | Likes | Profile Visits | Follows | Caption | Hashtags |
+|----|----|----|----|----|----|----|----|----|----|----|----|----|----|
+| 0 | 3920 | 2586 | 1028 | 619 | 56 | 98 | 9 | 5 | 162 | 35 | 2 | Here are some of the most important data visua... | \#finance #money #business #investing #investme... |
+| 1 | 5394 | 2727 | 1838 | 1174 | 78 | 194 | 7 | 14 | 224 | 48 | 10 | Here are some of the best data science project... | \#healthcare #health #covid #data #datascience ... |
+| 2 | 4021 | 2085 | 1188 | 0 | 533 | 41 | 11 | 1 | 131 | 62 | 12 | Learn how to train a machine learning model an... | \#data #datascience #dataanalysis #dataanalytic... |
+| 3 | 4528 | 2700 | 621 | 932 | 73 | 172 | 10 | 7 | 213 | 23 | 8 | Here’s how you can write a Python program to d... | \#python #pythonprogramming #pythonprojects #py... |
+| 4 | 2518 | 1704 | 255 | 279 | 37 | 96 | 5 | 4 | 123 | 8 | 0 | Plotting annotations while visualizing your da... | \#datavisualization #datascience #data #dataana... |
+
+
 
 ``` python
 ins.columns
@@ -153,10 +163,20 @@ ins['data_science_caption'] = ins['data_science_caption'].apply(lambda x: 1 if x
 ins['data_science_count_caption'] = ins['Caption'].astype(str).str.count('[Dd]ata\\s?[Ss]cience')
 
 # View results
-ins[['Caption', 'data_science_caption', 'data_science_count_caption']].head().to_markdown()         
+ins[['Caption', 'data_science_caption', 'data_science_count_caption']].head()
 ```
 
-    '|    | Caption                                                                                                                                                                                     |   data_science_caption |   data_science_count_caption |\n|---:|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------:|-----------------------------:|\n|  0 | Here are some of the most important data visualizations that every Financial Data Analyst/Scientist should know.                                                                            |                      0 |                            0 |\n|  1 | Here are some of the best data science project ideas on healthcare. If you want to become a data science professional in the healthcare domain then you must try to work on these projects. |                      1 |                            2 |\n|  2 | Learn how to train a machine learning model and giving inputs to your trained model to make predictions using Python.                                                                       |                      0 |                            0 |\n|  3 | Here\x92s how you can write a Python program to detect whether a sentence is a question or not. The idea here is to find the words that we see in the beginning of a question in the beginning of a sentence.                                                                                                                                                                                             |                      0 |                            0 |\n|  4 | Plotting annotations while visualizing your data is considered good practice to make the graphs self-explanatory. Here is an example of how you can annotate a graph using Python.          |                      0 |                            0 |'
+
+
+|  | Caption | data_science_caption | data_science_count_caption |
+|----|----|----|----|
+| 0 | Here are some of the most important data visua... | 0 | 0 |
+| 1 | Here are some of the best data science project... | 1 | 2 |
+| 2 | Learn how to train a machine learning model an... | 0 | 0 |
+| 3 | Here’s how you can write a Python program to d... | 0 | 0 |
+| 4 | Plotting annotations while visualizing your da... | 0 | 0 |
+
+
 
 ### data_science_in_hashtags
 
@@ -171,10 +191,20 @@ ins['data_science_hashtags'] = ins['data_science_hashtags'].apply(lambda x: 1 if
 ins['data_science_count_hashtags'] = ins['Hashtags'].astype(str).str.count('[Dd]ata\\s?[Ss]cience')
 
 # View result
-ins[['Hashtags', 'data_science_hashtags', 'data_science_count_hashtags']].head().to_markdown()
+ins[['Hashtags', 'data_science_hashtags', 'data_science_count_hashtags']].head()
 ```
 
-    '|    | Hashtags                                                                                                                                                                                                                                                                                                                                                                               |   data_science_hashtags |   data_science_count_hashtags |\n|---:|:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------:|------------------------------:|\n|  0 | #finance\xa0#money\xa0#business\xa0#investing\xa0#investment\xa0#trading\xa0#stockmarket\xa0#data\xa0#datascience\xa0#dataanalysis\xa0#dataanalytics\xa0#datascientist\xa0#machinelearning\xa0#python\xa0#pythonprogramming\xa0#pythonprojects\xa0#pythoncode\xa0#artificialintelligence\xa0#ai\xa0#dataanalyst\xa0#amankharwal\xa0#thecleverprogrammer                                                                                               |                       1 |                             1 |\n|  1 | #healthcare\xa0#health\xa0#covid\xa0#data\xa0#datascience\xa0#dataanalysis\xa0#dataanalytics\xa0#datascientist\xa0#machinelearning\xa0#python\xa0#pythonprogramming\xa0#pythonprojects\xa0#pythoncode\xa0#artificialintelligence\xa0#ai\xa0#dataanalyst\xa0#amankharwal\xa0#thecleverprogrammer                                                                                                                                           |                       1 |                             1 |\n|  2 | #data\xa0#datascience\xa0#dataanalysis\xa0#dataanalytics\xa0#datascientist\xa0#machinelearning\xa0#python\xa0#pythonprogramming\xa0#pythonprojects\xa0#pythoncode\xa0#artificialintelligence\xa0#ai\xa0#deeplearning\xa0#machinelearningprojects\xa0#datascienceprojects\xa0#amankharwal\xa0#thecleverprogrammer\xa0#machinelearningmodels                                                                                                |                       1 |                             2 |\n|  3 | #python\xa0#pythonprogramming\xa0#pythonprojects\xa0#pythoncode\xa0#pythonlearning\xa0#pythondeveloper\xa0#pythoncoding\xa0#pythonprogrammer\xa0#amankharwal\xa0#thecleverprogrammer\xa0#pythonprojects                                                                                                                                                                                                              |                       0 |                             0 |\n|  4 | #datavisualization\xa0#datascience\xa0#data\xa0#dataanalytics\xa0#machinelearning\xa0#dataanalysis\xa0#artificialintelligence\xa0#python\xa0#datascientist\xa0#bigdata\xa0#deeplearning\xa0#dataviz\xa0#ai\xa0#analytics\xa0#technology\xa0#dataanalyst\xa0#programming\xa0#pythonprogramming\xa0#statistics\xa0#coding\xa0#businessintelligence\xa0#datamining\xa0#tech\xa0#business\xa0#computerscience\xa0#tableau\xa0#database\xa0#thecleverprogrammer\xa0#amankharwal |                       1 |                             1 |'
+
+
+|  | Hashtags | data_science_hashtags | data_science_count_hashtags |
+|----|----|----|----|
+| 0 | \#finance #money #business #investing #investme... | 1 | 1 |
+| 1 | \#healthcare #health #covid #data #datascience ... | 1 | 1 |
+| 2 | \#data #datascience #dataanalysis #dataanalytic... | 1 | 2 |
+| 3 | \#python #pythonprogramming #pythonprojects #py... | 0 | 0 |
+| 4 | \#datavisualization #datascience #data #dataana... | 1 | 1 |
+
+
 
 ## Subsetting
 
@@ -186,28 +216,56 @@ modeling stage.
 ``` python
 # Subset posts that used at least one hashtag to compare hashtagged vs non-hashtagged
 hashtag_posts = ins[ins['hashtags_count'] > 0]
-hashtag_posts.head().to_markdown()
+hashtag_posts.head()
 ```
 
-    '|    |   Impressions |   From Home |   From Hashtags |   From Explore |   From Other |   Saves |   Comments |   Shares |   Likes |   Profile Visits |   Follows | Caption                                                                                                                                                                                     | Hashtags                                                                                                                                                                                                                                                                                                                                                                               |   engagement |   caption_length |   hashtags_count |   pct_from_hashtags |   high_engagement |   data_science_caption |   data_science_count_caption |   data_science_hashtags |   data_science_count_hashtags |\n|---:|--------------:|------------:|----------------:|---------------:|-------------:|--------:|-----------:|---------:|--------:|-----------------:|----------:|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------:|-----------------:|-----------------:|--------------------:|------------------:|-----------------------:|-----------------------------:|------------------------:|------------------------------:|\n|  0 |          3920 |        2586 |            1028 |            619 |           56 |      98 |          9 |        5 |     162 |               35 |         2 | Here are some of the most important data visualizations that every Financial Data Analyst/Scientist should know.                                                                            | #finance\xa0#money\xa0#business\xa0#investing\xa0#investment\xa0#trading\xa0#stockmarket\xa0#data\xa0#datascience\xa0#dataanalysis\xa0#dataanalytics\xa0#datascientist\xa0#machinelearning\xa0#python\xa0#pythonprogramming\xa0#pythonprojects\xa0#pythoncode\xa0#artificialintelligence\xa0#ai\xa0#dataanalyst\xa0#amankharwal\xa0#thecleverprogrammer                                                                                               |          311 |              112 |               22 |            0.262245 |                 0 |                      0 |                            0 |                       1 |                             1 |\n|  1 |          5394 |        2727 |            1838 |           1174 |           78 |     194 |          7 |       14 |     224 |               48 |        10 | Here are some of the best data science project ideas on healthcare. If you want to become a data science professional in the healthcare domain then you must try to work on these projects. | #healthcare\xa0#health\xa0#covid\xa0#data\xa0#datascience\xa0#dataanalysis\xa0#dataanalytics\xa0#datascientist\xa0#machinelearning\xa0#python\xa0#pythonprogramming\xa0#pythonprojects\xa0#pythoncode\xa0#artificialintelligence\xa0#ai\xa0#dataanalyst\xa0#amankharwal\xa0#thecleverprogrammer                                                                                                                                           |          497 |              187 |               18 |            0.340749 |                 1 |                      1 |                            2 |                       1 |                             1 |\n|  2 |          4021 |        2085 |            1188 |              0 |          533 |      41 |         11 |        1 |     131 |               62 |        12 | Learn how to train a machine learning model and giving inputs to your trained model to make predictions using Python.                                                                       | #data\xa0#datascience\xa0#dataanalysis\xa0#dataanalytics\xa0#datascientist\xa0#machinelearning\xa0#python\xa0#pythonprogramming\xa0#pythonprojects\xa0#pythoncode\xa0#artificialintelligence\xa0#ai\xa0#deeplearning\xa0#machinelearningprojects\xa0#datascienceprojects\xa0#amankharwal\xa0#thecleverprogrammer\xa0#machinelearningmodels                                                                                                |          258 |              117 |               18 |            0.295449 |                 0 |                      0 |                            0 |                       1 |                             2 |\n|  3 |          4528 |        2700 |             621 |            932 |           73 |     172 |         10 |        7 |     213 |               23 |         8 | Here\x92s how you can write a Python program to detect whether a sentence is a question or not. The idea here is to find the words that we see in the beginning of a question in the beginning of a sentence.                                                                                                                                                                                             | #python\xa0#pythonprogramming\xa0#pythonprojects\xa0#pythoncode\xa0#pythonlearning\xa0#pythondeveloper\xa0#pythoncoding\xa0#pythonprogrammer\xa0#amankharwal\xa0#thecleverprogrammer\xa0#pythonprojects                                                                                                                                                                                                              |          433 |              202 |               11 |            0.137147 |                 1 |                      0 |                            0 |                       0 |                             0 |\n|  4 |          2518 |        1704 |             255 |            279 |           37 |      96 |          5 |        4 |     123 |                8 |         0 | Plotting annotations while visualizing your data is considered good practice to make the graphs self-explanatory. Here is an example of how you can annotate a graph using Python.          | #datavisualization\xa0#datascience\xa0#data\xa0#dataanalytics\xa0#machinelearning\xa0#dataanalysis\xa0#artificialintelligence\xa0#python\xa0#datascientist\xa0#bigdata\xa0#deeplearning\xa0#dataviz\xa0#ai\xa0#analytics\xa0#technology\xa0#dataanalyst\xa0#programming\xa0#pythonprogramming\xa0#statistics\xa0#coding\xa0#businessintelligence\xa0#datamining\xa0#tech\xa0#business\xa0#computerscience\xa0#tableau\xa0#database\xa0#thecleverprogrammer\xa0#amankharwal |          236 |              178 |               29 |            0.101271 |                 0 |                      0 |                            0 |                       1 |                             1 |'
+
+
+|  | Impressions | From Home | From Hashtags | From Explore | From Other | Saves | Comments | Shares | Likes | Profile Visits | ... | Hashtags | engagement | caption_length | hashtags_count | pct_from_hashtags | high_engagement | data_science_caption | data_science_count_caption | data_science_hashtags | data_science_count_hashtags |
+|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|
+| 0 | 3920 | 2586 | 1028 | 619 | 56 | 98 | 9 | 5 | 162 | 35 | ... | \#finance #money #business #investing #investme... | 311 | 112 | 22 | 0.262245 | 0 | 0 | 0 | 1 | 1 |
+| 1 | 5394 | 2727 | 1838 | 1174 | 78 | 194 | 7 | 14 | 224 | 48 | ... | \#healthcare #health #covid #data #datascience ... | 497 | 187 | 18 | 0.340749 | 1 | 1 | 2 | 1 | 1 |
+| 2 | 4021 | 2085 | 1188 | 0 | 533 | 41 | 11 | 1 | 131 | 62 | ... | \#data #datascience #dataanalysis #dataanalytic... | 258 | 117 | 18 | 0.295449 | 0 | 0 | 0 | 1 | 2 |
+| 3 | 4528 | 2700 | 621 | 932 | 73 | 172 | 10 | 7 | 213 | 23 | ... | \#python #pythonprogramming #pythonprojects #py... | 433 | 202 | 11 | 0.137147 | 1 | 0 | 0 | 0 | 0 |
+| 4 | 2518 | 1704 | 255 | 279 | 37 | 96 | 5 | 4 | 123 | 8 | ... | \#datavisualization #datascience #data #dataana... | 236 | 178 | 29 | 0.101271 | 0 | 0 | 0 | 1 | 1 |
+
+
 
 ``` python
 # Subset high engagement posts to identify characteristics of top-performing posts
 high_engagement_posts = ins[ins['high_engagement'] == 1]
-high_engagement_posts.head().to_markdown()
+high_engagement_posts.head()
 ```
 
-    '|    |   Impressions |   From Home |   From Hashtags |   From Explore |   From Other |   Saves |   Comments |   Shares |   Likes |   Profile Visits |   Follows | Caption                                                                                                                                                                                     | Hashtags                                                                                                                                                                                                                                                                                                                                                                                                               |   engagement |   caption_length |   hashtags_count |   pct_from_hashtags |   high_engagement |   data_science_caption |   data_science_count_caption |   data_science_hashtags |   data_science_count_hashtags |\n|---:|--------------:|------------:|----------------:|---------------:|-------------:|--------:|-----------:|---------:|--------:|-----------------:|----------:|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------:|-----------------:|-----------------:|--------------------:|------------------:|-----------------------:|-----------------------------:|------------------------:|------------------------------:|\n|  1 |          5394 |        2727 |            1838 |           1174 |           78 |     194 |          7 |       14 |     224 |               48 |        10 | Here are some of the best data science project ideas on healthcare. If you want to become a data science professional in the healthcare domain then you must try to work on these projects. | #healthcare\xa0#health\xa0#covid\xa0#data\xa0#datascience\xa0#dataanalysis\xa0#dataanalytics\xa0#datascientist\xa0#machinelearning\xa0#python\xa0#pythonprogramming\xa0#pythonprojects\xa0#pythoncode\xa0#artificialintelligence\xa0#ai\xa0#dataanalyst\xa0#amankharwal\xa0#thecleverprogrammer                                                                                                                                                                           |          497 |              187 |               18 |            0.340749 |                 1 |                      1 |                            2 |                       1 |                             1 |\n|  3 |          4528 |        2700 |             621 |            932 |           73 |     172 |         10 |        7 |     213 |               23 |         8 | Here\x92s how you can write a Python program to detect whether a sentence is a question or not. The idea here is to find the words that we see in the beginning of a question in the beginning of a sentence.                                                                                                                                                                                             | #python\xa0#pythonprogramming\xa0#pythonprojects\xa0#pythoncode\xa0#pythonlearning\xa0#pythondeveloper\xa0#pythoncoding\xa0#pythonprogrammer\xa0#amankharwal\xa0#thecleverprogrammer\xa0#pythonprojects                                                                                                                                                                                                                                              |          433 |              202 |               11 |            0.137147 |                 1 |                      0 |                            0 |                       0 |                             0 |\n|  8 |          3749 |        2384 |             857 |            248 |           49 |     155 |          6 |        8 |     159 |               36 |         4 | Here are some of the best data analysis project ideas that you should try and show on your resume. These projects will help you to show your data analysis skills.                          | #dataanalytics\xa0#datascience\xa0#data\xa0#machinelearning\xa0#datavisualization\xa0#bigdata\xa0#artificialintelligence\xa0#datascientist\xa0#python\xa0#analytics\xa0#ai\xa0#dataanalysis\xa0#deeplearning\xa0#technology\xa0#programming\xa0#coding\xa0#dataanalyst\xa0#business\xa0#pythonprogramming\xa0#datamining\xa0#tech\xa0#businessintelligence\xa0#database\xa0#computerscience\xa0#statistics\xa0#powerbi\xa0#dataanalysisprojects\xa0#businessanalytics\xa0#thecleverprogrammer\xa0#amankharwal |          368 |              162 |               30 |            0.228594 |                 1 |                      0 |                            0 |                       1 |                             1 |\n|  9 |          4115 |        2609 |            1104 |            178 |           46 |     122 |          6 |        3 |     191 |               31 |         6 | Here are two best ways to count the number of letters in a string using Python.                                                                                                             | #python\xa0#pythonprogramming\xa0#pythonprojects\xa0#pythoncode\xa0#pythonlearning\xa0#pythondeveloper\xa0#pythoncoding\xa0#pythonprogrammer\xa0#amankharwal\xa0#thecleverprogrammer\xa0#pythonprojects                                                                                                                                                                                                                                              |          359 |               79 |               11 |            0.268287 |                 1 |                      0 |                            0 |                       0 |                             0 |\n| 14 |          9453 |        2525 |            5799 |            208 |          794 |     100 |          6 |       10 |     294 |              181 |        42 | Omicron Variant Sentiment Analysis using Python: Link in Bio                                                                                                                                | #data\xa0#datascience\xa0#dataanalysis\xa0#dataanalytics\xa0#datascientist\xa0#machinelearning\xa0#python\xa0#pythonprogramming\xa0#pythonprojects\xa0#pythoncode\xa0#artificialintelligence\xa0#ai\xa0#deeplearning\xa0#sentimentanalysis\xa0#sentiment\xa0#nlp\xa0#naturallanguageprocessing\xa0#amankharwal\xa0#thecleverprogrammer                                                                                                                                       |          633 |               60 |               19 |            0.613456 |                 1 |                      0 |                            0 |                       1 |                             1 |'
+
+
+|  | Impressions | From Home | From Hashtags | From Explore | From Other | Saves | Comments | Shares | Likes | Profile Visits | ... | Hashtags | engagement | caption_length | hashtags_count | pct_from_hashtags | high_engagement | data_science_caption | data_science_count_caption | data_science_hashtags | data_science_count_hashtags |
+|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|
+| 1 | 5394 | 2727 | 1838 | 1174 | 78 | 194 | 7 | 14 | 224 | 48 | ... | \#healthcare #health #covid #data #datascience ... | 497 | 187 | 18 | 0.340749 | 1 | 1 | 2 | 1 | 1 |
+| 3 | 4528 | 2700 | 621 | 932 | 73 | 172 | 10 | 7 | 213 | 23 | ... | \#python #pythonprogramming #pythonprojects #py... | 433 | 202 | 11 | 0.137147 | 1 | 0 | 0 | 0 | 0 |
+| 8 | 3749 | 2384 | 857 | 248 | 49 | 155 | 6 | 8 | 159 | 36 | ... | \#dataanalytics #datascience #data #machinelear... | 368 | 162 | 30 | 0.228594 | 1 | 0 | 0 | 1 | 1 |
+| 9 | 4115 | 2609 | 1104 | 178 | 46 | 122 | 6 | 3 | 191 | 31 | ... | \#python #pythonprogramming #pythonprojects #py... | 359 | 79 | 11 | 0.268287 | 1 | 0 | 0 | 0 | 0 |
+| 14 | 9453 | 2525 | 5799 | 208 | 794 | 100 | 6 | 10 | 294 | 181 | ... | \#data #datascience #dataanalysis #dataanalytic... | 633 | 60 | 19 | 0.613456 | 1 | 0 | 0 | 1 | 1 |
+
+
 
 ## Summarizing
 
 ``` python
 # Summarize impressions, engagement, likes, and comments grouped by whether posts have hashtags
 summary_by_hashtag = ins.groupby(ins['hashtags_count']>0)[['Impressions','engagement','Likes','Comments']].agg(['mean','median','count'])
-summary_by_hashtag.to_markdown()
+summary_by_hashtag
 ```
 
-    "| hashtags_count   |   ('Impressions', 'mean') |   ('Impressions', 'median') |   ('Impressions', 'count') |   ('engagement', 'mean') |   ('engagement', 'median') |   ('engagement', 'count') |   ('Likes', 'mean') |   ('Likes', 'median') |   ('Likes', 'count') |   ('Comments', 'mean') |   ('Comments', 'median') |   ('Comments', 'count') |\n|:-----------------|--------------------------:|----------------------------:|---------------------------:|-------------------------:|---------------------------:|--------------------------:|--------------------:|----------------------:|---------------------:|-----------------------:|-------------------------:|------------------------:|\n| True             |                   5703.99 |                        4289 |                        119 |                  414.496 |                        314 |                       119 |             173.782 |                   151 |                  119 |                6.66387 |                        6 |                     119 |"
+
+
+|  | Impressions |  |  | engagement |  |  | Likes |  |  | Comments |  |  |
+|----|----|----|----|----|----|----|----|----|----|----|----|----|
+|  | mean | median | count | mean | median | count | mean | median | count | mean | median | count |
+| hashtags_count |  |  |  |  |  |  |  |  |  |  |  |  |
+| True | 5703.991597 | 4289.0 | 119 | 414.495798 | 314.0 | 119 | 173.781513 | 151.0 | 119 | 6.663866 | 6.0 | 119 |
+
+
 
 ``` python
 # Calculate total impressions from each source to see which source contributes the most to overall impressions
@@ -217,10 +275,16 @@ summary_by_source = pd.DataFrame({
     'from_explore_total': ins['From Explore'].sum(),
     'from_other_total': ins['From Other'].sum()
 }, index=[0])
-summary_by_source.to_markdown()
+summary_by_source
 ```
 
-    '|    |   from_home_total |   from_hashtags_total |   from_explore_total |   from_other_total |\n|---:|------------------:|----------------------:|---------------------:|-------------------:|\n|  0 |            294619 |                224614 |               128294 |              20360 |'
+
+
+|     | from_home_total | from_hashtags_total | from_explore_total | from_other_total |
+|-----|-----------------|---------------------|--------------------|------------------|
+| 0   | 294619          | 224614              | 128294             | 20360            |
+
+
 
 ## Visualization 2
 
@@ -324,7 +388,7 @@ ols_model.summary()
 | Model:            | OLS              | Adj. R-squared:     | 0.761    |
 | Method:           | Least Squares    | F-statistic:        | 35.17    |
 | Date:             | Wed, 03 Dec 2025 | Prob (F-statistic): | 1.43e-30 |
-| Time:             | 11:52:09         | Log-Likelihood:     | -11.223  |
+| Time:             | 13:03:01         | Log-Likelihood:     | -11.223  |
 | No. Observations: | 119              | AIC:                | 46.45    |
 | Df Residuals:     | 107              | BIC:                | 79.79    |
 | Df Model:         | 11               |                     |          |
@@ -394,7 +458,7 @@ logit_model.summary()
 | Model:           | Logit            | Df Residuals:     | 107       |
 | Method:          | MLE              | Df Model:         | 11        |
 | Date:            | Wed, 03 Dec 2025 | Pseudo R-squ.:    | 0.6366    |
-| Time:            | 11:52:09         | Log-Likelihood:   | -29.976   |
+| Time:            | 13:03:01         | Log-Likelihood:   | -29.976   |
 | converged:       | True             | LL-Null:          | -82.480   |
 | Covariance Type: | nonrobust        | LLR p-value:      | 1.810e-17 |
 
