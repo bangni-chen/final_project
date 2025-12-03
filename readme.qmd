@@ -8,8 +8,12 @@ execute:
 jupyter: python3
 ---
 
-## The Data
-This dataset includes Instagram post-level metrics for reach and engagement. Key numeric columns are Impressions, Likes, Comments, Saves, Shares, Profile Visits, Follows, and the breakdown of impressions by source (From Home, From Hashtags, From Explore, From Other). There are also two text columns: Caption and Hashtags. The goal of the analysis is clear and testable: to see which content and distribution features predict post reach and engagement, and whether the text in captions or hashtags is associated with higher engagement.
+## Introduction
+This project explores what drives reach and engagement on Instagram using a public dataset from Kaggle. The dataset contains post-level performance metrics, including impressions, likes, comments, saves, shares, profile visits, and follows, along with impression sources such as Home, Hashtags, Explore, and Other. It also includes caption text and hashtags, enabling analysis of language patterns and content characteristics.
+
+The goal of this project is to understand how text features, hashtag usage, and traffic sources influence reach and engagement. By combining quantitative metrics with text-based analysis, this project aims to provide actionable insights that can help content creators optimize their posting strategy and improve overall content performance.
+
+Data source: Instagram Reach Analysis: Case Study, Kaggle — https://www.kaggle.com/datasets/bhanupratapbiswas/instagram-reach-analysis-case-study
 
 ### Read
 
